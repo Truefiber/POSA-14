@@ -35,6 +35,9 @@ public class SimpleSemaphore {
         // TODO - you fill in here to initialize the SimpleSemaphore,
         // making sure to allow both fair and non-fair Semaphore
         // semantics.
+        lock = new ReentrantLock(fair);
+        condition = lock.newCondition();
+        permitsNumber = permits;
     }
 
     /**
@@ -43,6 +46,15 @@ public class SimpleSemaphore {
      */
     public void acquire() throws InterruptedException {
         // TODO - you fill in here.
+        lock.lockInterruptibly();
+        try {
+            while (permitsNumber == 0) {
+                condition.await();
+            }
+            permitsNumber--;
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
@@ -51,6 +63,17 @@ public class SimpleSemaphore {
      */
     public void acquireUninterruptibly() {
         // TODO - you fill in here.
+        lock.lock();
+
+        try {
+            while (permitsNumber == 0) {
+                condition.awaitUninterruptibly();
+            }
+            permitsNumber--;
+
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
@@ -58,6 +81,14 @@ public class SimpleSemaphore {
      */
     void release() {
         // TODO - you fill in here.
+        lock.lock();
+
+        try {
+            permitsNumber++;
+            condition.signal();
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
@@ -65,6 +96,6 @@ public class SimpleSemaphore {
      */
     public int availablePermits() {
         // TODO - you fill in here to return the correct result
-    	return 0;
+    	return permitsNumber;
     }
 }
