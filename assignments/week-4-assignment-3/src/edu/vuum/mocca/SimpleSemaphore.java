@@ -1,5 +1,6 @@
 package edu.vuum.mocca;
 import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -15,17 +16,20 @@ public class SimpleSemaphore {
      * Define a ReentrantLock to protect the critical section.
      */
     // TODO - you fill in here
+    Lock lock;
 
     /**
      * Define a Condition that waits while the number of permits is 0.
      */
     // TODO - you fill in here
+    Condition condition;
 
     /**
      * Define a count of the number of available permits.
      */
     // TODO - you fill in here. Make sure that this data member will
     // ensure its values aren't cached by multiple Threads..
+    volatile int permitsNumber;
 
     public SimpleSemaphore(int permits, boolean fair) {
         // TODO - you fill in here to initialize the SimpleSemaphore,
